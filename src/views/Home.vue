@@ -1,11 +1,11 @@
 <template>
-  <el-container>
+  <el-container class="">
     <el-aside width="200px">
       <SideMenu  />
     </el-aside>
     <el-container>
-      <el-header>
-        <el-breadcrumb separator="/">
+      <el-header class="sys-header">
+        <el-breadcrumb separator="/" class="sys-breadcrumb">
           <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="index" :to="item.path">
             {{ item.meta.title }}
           </el-breadcrumb-item>
@@ -37,3 +37,10 @@ const breadcrumbs = computed(() => {
   });
 });
 </script>
+<style scoped>
+.sys-header, .sys-breadcrumb {
+  height: 40px;
+  line-height: 40px;
+  background: #eee;
+}
+</style>
