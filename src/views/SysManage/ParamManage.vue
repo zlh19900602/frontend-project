@@ -1,5 +1,5 @@
 <script setup></script>
 
 <template>
-  <div>用户列表</div>
+  <div>参数管理</div>
 </template>

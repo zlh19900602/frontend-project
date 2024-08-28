@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import Dashboard from '../views/Dashboard.vue'
 import Login from '../views/Login.vue'
-import UserManage from '../views/UserManage.vue'
-import MenuManage from '../views/MenuManage.vue'
-import RoleManage from '../views/RoleManage.vue'
-import UserList from '../views/userManage/UserList.vue'
-import UserPermissions from '../views/userManage/UserPermissions.vue'
+import Home from '../views/Home.vue'
+import MenuManage from '../views/SysManage/MenuManage.vue'
+import RoleManage from '../views/SysManage/RoleManage.vue'
+import ParamManage from '../views/SysManage/ParamManage.vue'
+import UserManage from '../views/SysManage/UserManage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,40 +15,46 @@ const router = createRouter({
       redirect: '/login'
     },
     {
-      path: '/home',
-      name: 'home',
-      component: Home,
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard,
       children: [
         {
-          path: '/user-manage',
-          name: 'user-manage',
-          meta: { title: '用户管理', icon: 'UserFilled' },
+          path: '/home',
+          name: 'home',
+          component: Home,
+          meta: { title: '首页', icon: 'HomeFilled' },
+        },
+        {
+          path: '/sys-manage',
+          name: 'sys-manage',
+          meta: { title: '系统管理', icon: 'UserFilled' },
           children: [
             {
-              path: 'user-list',
-              name: 'user-list',
-              component: UserList,
-              meta: { title: '用户列表' }
+              path: 'user-manage',
+              name: 'user-manage',
+              component: UserManage,
+              meta: { title: '用户管理' }
             },
             {
-              path: 'user-permissions',
-              name: 'user-permissions',
-              component: UserPermissions,
-              meta: { title: '用户权限' }
+              path: 'menu-manage',
+              name: 'menu-manage',
+              component: MenuManage,
+              meta: { title: '菜单管理' }
+            },
+            {
+              path: 'param-manage',
+              name: 'param-manage',
+              component: ParamManage,
+              meta: { title: '参数管理' }
+            },
+            {
+              path: 'role-manage',
+              name: 'role-manage',
+              component: RoleManage,
+              meta: { title: '角色管理' }
             }
-          ]
-        },
-        {
-          path: '/menu-manage',
-          name: 'menu-manage',
-          component: MenuManage,
-          meta: { title: '菜单管理', icon: 'Menu' }
-        },
-        {
-          path: '/role-manage',
-          name: 'role-manage',
-          component: RoleManage,
-          meta: { title: '角色管理', icon: 'Management' }
+          ],
         }
       ]
     },
