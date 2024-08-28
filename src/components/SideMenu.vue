@@ -34,7 +34,7 @@ const route = useRoute()
 
 // 获取需要在菜单中展示的路由
 const menuRoutes = computed(() => {
-  const homeRoute = router.options.routes.find((r) => r.name === 'home');
+  const homeRoute = router.options.routes.find((r) => r.name === 'dashboard');
   return homeRoute && homeRoute.children ? homeRoute.children : [];
 })
 
