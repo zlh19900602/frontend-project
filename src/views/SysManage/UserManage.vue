@@ -46,7 +46,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <addUserModal v-if="showModal" :visible.sync="showModal" @closeAddModal="handleCloseModal"/>
+    <addUserModal v-if="showModal" :visible.sync="showModal" @closeAddModal="handleCloseModal" @addUser="addUserHandle"/>
   </div>
 </template>
 
@@ -69,6 +69,10 @@ const handleCloseModal = () => {
 
 const handleQuery = () => {
   console.log('submit!')
+}
+
+const addUserHandle = (data) => {
+  tableData.push(data)
 }
 
 const form = ref({
