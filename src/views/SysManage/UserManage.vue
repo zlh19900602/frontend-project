@@ -72,7 +72,7 @@ const handleQuery = () => {
 }
 
 const addUserHandle = (data) => {
-  tableData.push(data)
+  tableData.value.push(data)
 }
 
 const form = ref({
@@ -85,7 +85,7 @@ const showModal = ref(false)
 const columns = ref([
   { prop: 'userId', label: '用户ID', width: 120, isFixed: true },
   { prop: 'userName', label: '用户名', width: 100 },
-  { prop: 'name', label: '姓名', width: 80 },
+  { prop: 'uname', label: '姓名', width: 80 },
   { prop: 'gender', label: '性别', width: 80 },
   { prop: 'mobile', label: '手机号', width: 120 },
   { prop: 'status', label: '状态', width: 70 },
@@ -93,11 +93,11 @@ const columns = ref([
   { prop: 'updateTime', label: '修改时间', width: 180 },
 ])
 
-const tableData = [
+const tableData = ref([
   {
     userId: 'U10001',
     userName: 'zhangs',
-    name: '张三',
+    uname: '张三',
     gender: '女',
     mobile: '13325321223',
     status: '正常',
@@ -107,7 +107,7 @@ const tableData = [
   {
     userId: 'U10002',
     userName: 'lis',
-    name: '李四',
+    uname: '李四',
     gender: '男',
     mobile: '17313243332',
     status: '正常',
@@ -117,14 +117,14 @@ const tableData = [
   {
     userId: 'U10003',
     userName: 'wangw',
-    name: '王五',
+    uname: '王五',
     gender: '女',
     mobile: '15823432111',
     status: '注销',
     createTime: '2024-02-10 14:00:00',
     updateTime: '2024-03-20 10:40:00'
   },
-]
+])
 
 const headerCellStyle = {
   backgroundColor: '#e5e5e5', // 设置表头背景色
