@@ -14,7 +14,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="用户状态：">
-            <el-select v-model="form.status" placeholder="please select your zone">
+            <el-select v-model="form.state" placeholder="please select your zone">
               <el-option label="正常" value="1" />
               <el-option label="禁用" value="2" />
               <el-option label="注销" value="0" />
@@ -23,7 +23,7 @@
         </el-col>
       </el-row>
       <div class="u-f-btngroup">
-        <el-button type="primary" @click="handleQuery">查询</el-button>
+        <el-button type="primary" @click="queryUserHandle">查询</el-button>
         <el-button>重置</el-button>
       </div>
     </el-form>
@@ -31,12 +31,11 @@
       <el-button type="danger" round @click="HandleAddUser">新建用户</el-button>
     </div>
     <el-table class="s-u-table" :border="true" :header-cell-style="headerCellStyle" :data="tableData" style="width: 100%">
-      <el-table-column v-for="item in columns" :fixed="item.isFixed" :prop="item.prop" :label="item.label" :width="item.width" />
+      <el-table-column align="center" v-for="item in columns" :fixed="item.isFixed" :prop="item.prop" :label="item.label"
+        :width="item.width" />
       <el-table-column fixed="right" label="操作" min-width="120">
         <template #default>
-          <el-button link type="primary" size="small" @click="handleClick">
-            详情
-          </el-button>
+          <el-button link type="primary" size="small" @click="handleClick"> 详情 </el-button>
           <el-divider direction="vertical" />
           <el-button link type="primary" size="small">编辑</el-button>
           <el-divider direction="vertical" />
@@ -46,17 +45,39 @@
         </template>
       </el-table-column>
     </el-table>
-    <addUserModal v-if="showModal" :visible.sync="showModal" @closeAddModal="handleCloseModal" @addUser="addUserHandle"/>
+    <addUserModal v-if="showModal" :visible.sync="showModal" @closeAddModal="handleCloseModal" />
   </div>
 </template>
 
 <script setup>
 import addUserModal from '../../components/user/addUserModal.vue'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+
+onMounted(() => {
+  queryUserHandle()
+})
+
+const queryUserHandle = () => {
+  axios.post('/api/queryUser', form.value).then(res => {
+    let data = res.data;
+    tableData.value = data.map(item => {
+      return {
+        userName,
+        uName,
+        gender: item.gender == '2' ? '女' : '男',
+        mobile,
+        state: item.gender == '2' ? '女' : '男',,
+        createTime: '2023-08-18 12:00:00',
+        updateTime: '2024-03-20 15:40:00'
+      },
+    })
+  })
+}
 
 // 新建用户
 const HandleAddUser = () => {
-  showModal.value = true;
+  showModal.value = true
 }
 
 const handleClick = () => {
@@ -64,78 +85,67 @@ const handleClick = () => {
 }
 
 const handleCloseModal = () => {
-  showModal.value = false;
-}
-
-const handleQuery = () => {
-  console.log('submit!')
-}
-
-const addUserHandle = (data) => {
-  tableData.value.push(data)
+  showModal.value = false
 }
 
 const form = ref({
   userName: '',
   mobile: '',
-  status: '1'
+  state: '1'
 })
 const showModal = ref(false)
 
 const columns = ref([
-  { prop: 'userId', label: '用户ID', width: 120, isFixed: true },
   { prop: 'userName', label: '用户名', width: 100 },
-  { prop: 'uname', label: '姓名', width: 80 },
-  { prop: 'gender', label: '性别', width: 80 },
+  { prop: 'uName', label: '姓名', width: 100 },
+  { prop: 'gender', label: '性别', width: 100 },
   { prop: 'mobile', label: '手机号', width: 120 },
-  { prop: 'status', label: '状态', width: 70 },
+  { prop: 'state', label: '状态', width: 100 },
   { prop: 'createTime', label: '创建时间', width: 180 },
-  { prop: 'updateTime', label: '修改时间', width: 180 },
+  { prop: 'updateTime', label: '修改时间', width: 180 }
 ])
 
 const tableData = ref([
   {
-    userId: 'U10001',
     userName: 'zhangs',
-    uname: '张三',
+    uName: '张三',
     gender: '女',
     mobile: '13325321223',
-    status: '正常',
+    state: '正常',
     createTime: '2023-08-18 12:00:00',
     updateTime: '2024-03-20 15:40:00'
   },
   {
-    userId: 'U10002',
     userName: 'lis',
-    uname: '李四',
+    uName: '李四',
     gender: '男',
     mobile: '17313243332',
-    status: '正常',
+    state: '正常',
     createTime: '2023-12-18 09:00:00',
     updateTime: '2024-05-20 18:40:00'
   },
   {
-    userId: 'U10003',
     userName: 'wangw',
-    uname: '王五',
+    uName: '王五',
     gender: '女',
     mobile: '15823432111',
-    status: '注销',
+    state: '注销',
     createTime: '2024-02-10 14:00:00',
     updateTime: '2024-03-20 10:40:00'
-  },
+  }
 ])
 
 const headerCellStyle = {
   backgroundColor: '#e5e5e5', // 设置表头背景色
-  color: '#333'              // 设置表头字体颜色
-};
+  color: '#333' // 设置表头字体颜色
+}
 </script>
 <style scoped>
 .u-f-btngroup {
   text-align: center;
   margin: 20px 0;
 }
+
 .u-f-opt-btngroup {
   margin-bottom: 20px;
 }

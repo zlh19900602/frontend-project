@@ -23,7 +23,7 @@ const router = createRouter({
           path: '/home',
           name: 'home',
           component: Home,
-          meta: { title: '首页', icon: 'HomeFilled' },
+          meta: { title: '首页', icon: 'HomeFilled' }
         },
         {
           path: '/sys-manage',
@@ -54,7 +54,7 @@ const router = createRouter({
               component: RoleManage,
               meta: { title: '角色管理' }
             }
-          ],
+          ]
         }
       ]
     },
