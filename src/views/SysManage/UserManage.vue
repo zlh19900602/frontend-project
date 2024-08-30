@@ -28,16 +28,16 @@
       </div>
     </el-form>
     <div class="u-f-opt-btngroup">
-      <el-button type="danger" round @click="HandleAddUser">新建用户</el-button>
+      <el-button type="danger" round @click="handleAddUser">新建用户</el-button>
     </div>
     <el-table class="s-u-table" :border="true" :header-cell-style="headerCellStyle" :data="tableData" style="width: 100%">
       <el-table-column align="center" v-for="item in columns" :fixed="item.isFixed" :prop="item.prop" :label="item.label"
         :width="item.width" />
       <el-table-column fixed="right" label="操作" min-width="120">
-        <template #default>
-          <el-button link type="primary" size="small" @click="handleClick"> 详情 </el-button>
+        <template #default="scope">
+          <el-button link type="primary" size="small" @click="queryUserInfoHandle(scope, 'detail')"> 详情 </el-button>
           <el-divider direction="vertical" />
-          <el-button link type="primary" size="small">编辑</el-button>
+          <el-button link type="primary" size="small" @click="queryUserInfoHandle(scope, 'edit')">编辑</el-button>
           <el-divider direction="vertical" />
           <el-button link type="primary" size="small">禁用</el-button>
           <el-divider direction="vertical" />
@@ -45,7 +45,8 @@
         </template>
       </el-table-column>
     </el-table>
-    <addUserModal v-if="showModal" :visible.sync="showModal" @closeAddModal="handleCloseModal" />
+    <addUserModal v-if="showModal" :visible.sync="showModal" :userInfo.sync="currentUser" :type.sync="type"
+      @closeAddModal="handleCloseModal" @updateData="queryUserHandle" />
   </div>
 </template>
 
@@ -59,7 +60,7 @@ onMounted(() => {
 })
 
 const queryUserHandle = () => {
-  axios.post('/api/queryUser', form.value).then(res => {
+  axios.post('/api/queryUser').then(res => {
     let data = res.data;
     tableData.value = data.map(item => {
       return {
@@ -69,19 +70,25 @@ const queryUserHandle = () => {
         mobile: item.mobile,
         state: item.state == '1' ? '正常' : item.state == '2' ? '禁用' : '注销',
         createTime: item.createTime,
-        updateTime: item.updateTime
+        updateTime: item.updateTime,
+        userId: item.userId
       }
     })
   })
 }
 
 // 新建用户
-const HandleAddUser = () => {
-  showModal.value = true
+const handleAddUser = () => {
+  type.value = 'add'
+  showModal.value = true;
 }
 
-const handleClick = () => {
-  console.log('click')
+const queryUserInfoHandle = (data, actionType) => {
+  console.log(data.row, 'datadata')
+  console.log(actionType, 'type')
+  type.value = actionType
+  currentUser.value = data.row;
+  showModal.value = true;
 }
 
 const handleCloseModal = () => {
@@ -93,7 +100,9 @@ const form = ref({
   mobile: '',
   state: '1'
 })
-const showModal = ref(false)
+const showModal = ref(false);
+const currentUser = ref(null);
+const type = ref('');
 
 const columns = ref([
   { prop: 'userName', label: '用户名', width: 100 },

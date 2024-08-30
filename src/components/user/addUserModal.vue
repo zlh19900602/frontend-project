@@ -49,14 +49,19 @@
   </el-dialog>
 </template>
 <script setup>
-import { defineEmits, ref, watch } from 'vue'
+import { defineEmits, ref, watch, onMounted } from 'vue'
 import axios from 'axios'
 
-const emit = defineEmits(['closeAddModal'])
+const emit = defineEmits(['closeAddModal', 'updateData'])
 
-const props = defineProps(['visible'])
+const props = defineProps(['visible', 'userInfo', 'type'])
 
 const isShowModal = ref(false)
+
+onMounted(() => {
+  console.info(props.type, 'type')
+  if (['detail', 'edit'].includes(props.type)) queryUserInfo()
+})
 
 watch(
   () => props.visible,
@@ -68,6 +73,12 @@ watch(
 
 const handleCloseModal = () => {
   emit('closeAddModal', '子组件通知父组件了')
+}
+
+const queryUserInfo = () => {
+  axios.post('/api/queryUserById', { userId: props.userInfo.userId }).then(res => {
+    form.value = res.data;
+  })
 }
 
 const saveUserHandle = () => {
@@ -85,6 +96,7 @@ const saveUserHandle = () => {
 
 const submitForm = () => {
   return axios.post('/api/insertUser', form.value).then(response => {
+    emit('updateData')
     ElMessage({
       message: response.data.message,
       type: 'success',
