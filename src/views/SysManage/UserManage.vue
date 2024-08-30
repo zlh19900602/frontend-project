@@ -63,14 +63,14 @@ const queryUserHandle = () => {
     let data = res.data;
     tableData.value = data.map(item => {
       return {
-        userName,
-        uName,
+        userName: item.userName,
+        uName: item.uName,
         gender: item.gender == '2' ? '女' : '男',
-        mobile,
-        state: item.gender == '2' ? '女' : '男',,
-        createTime: '2023-08-18 12:00:00',
-        updateTime: '2024-03-20 15:40:00'
-      },
+        mobile: item.mobile,
+        state: item.state == '1' ? '正常' : item.state == '2' ? '禁用' : '注销',
+        createTime: item.createTime,
+        updateTime: item.updateTime
+      }
     })
   })
 }
@@ -105,35 +105,7 @@ const columns = ref([
   { prop: 'updateTime', label: '修改时间', width: 180 }
 ])
 
-const tableData = ref([
-  {
-    userName: 'zhangs',
-    uName: '张三',
-    gender: '女',
-    mobile: '13325321223',
-    state: '正常',
-    createTime: '2023-08-18 12:00:00',
-    updateTime: '2024-03-20 15:40:00'
-  },
-  {
-    userName: 'lis',
-    uName: '李四',
-    gender: '男',
-    mobile: '17313243332',
-    state: '正常',
-    createTime: '2023-12-18 09:00:00',
-    updateTime: '2024-05-20 18:40:00'
-  },
-  {
-    userName: 'wangw',
-    uName: '王五',
-    gender: '女',
-    mobile: '15823432111',
-    state: '注销',
-    createTime: '2024-02-10 14:00:00',
-    updateTime: '2024-03-20 10:40:00'
-  }
-])
+const tableData = ref([])
 
 const headerCellStyle = {
   backgroundColor: '#e5e5e5', // 设置表头背景色
