@@ -40,11 +40,11 @@
           <el-button link type="primary" size="small" @click="queryUserInfoHandle(scope, 'edit')">编辑</el-button>
           <template v-if="scope.row.state !== '禁用'">
             <el-divider direction="vertical" />
-            <el-button link type="primary" size="small">禁用</el-button>
+            <el-button link type="primary" size="small" @click="forbiddenHandle(scope, '2')">禁用</el-button>
           </template>
           <template v-if="scope.row.state !== '注销'">
             <el-divider direction="vertical" />
-            <el-button link type="primary" size="small">注销</el-button>
+            <el-button link type="primary" size="small" @click="forbiddenHandle(scope, '0')">注销</el-button>
           </template>
           <el-divider direction="vertical" />
           <el-button link type="primary" size="small">重置密码</el-button>
@@ -90,11 +90,51 @@ const handleAddUser = () => {
 }
 
 const queryUserInfoHandle = (data, actionType) => {
-  console.log(data.row, 'datadata')
-  console.log(actionType, 'type')
   type.value = actionType
   currentUser.value = data.row;
   showModal.value = true;
+}
+
+const forbiddenHandle = (data, type) => {
+  ElMessageBox.confirm(`您确认要更改为${type === '2' ? '禁用' : '注销'}状态吗?`, '提示',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(() => {
+    updateUserState(data, type)
+  }).catch(() => {
+
+  })
+}
+
+const updateUserState = (data, type) => {
+  if (type === '2') {
+    axios.post('/api/users/updateStateForbiddenById', { userId: data.row.userId }).then(res => {
+      if (res.data.code === '0') {
+        ElMessage({
+          message: '状态更新成功！',
+          type: 'success',
+        })
+        queryUserHandle()
+      } else {
+        ElMessage.error('状态更新失败！')
+      }
+    })
+  } else {
+    axios.post('/api/users/updateStateLogoutById', { userId: data.row.userId }).then(res => {
+      if (res.data.code === '0') {
+        ElMessage({
+          message: '状态更新成功！',
+          type: 'success',
+        })
+        queryUserHandle()
+      } else {
+        ElMessage.error('状态更新失败！')
+      }
+    })
+  }
 }
 
 const handleCloseModal = () => {
