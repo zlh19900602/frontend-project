@@ -43,7 +43,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="handleCloseModal">取消</el-button>
-        <el-button type="primary" @click="saveUserHandle">确认</el-button>
+        <el-button type="primary" v-if="props.type !== 'detail'" @click="saveUserHandle">确认</el-button>
       </div>
     </template>
   </el-dialog>
@@ -94,7 +94,10 @@ const saveUserHandle = () => {
 }
 
 const submitForm = () => {
-  return axios.post('/api/users/insertUser', form.value).then(response => {
+  let param = props.type === 'add' ? form.value : { ...form.value, userId: props.userInfo.userId }
+
+  let url = props.type === 'add' ? '/api/users/insertUser' : '/api/users/updateUserInfoById';
+  return axios.post(url, param).then(response => {
     emit('updateData')
     ElMessage({
       message: response.data.message,
