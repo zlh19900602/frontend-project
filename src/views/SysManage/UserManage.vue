@@ -38,10 +38,16 @@
           <el-button link type="primary" size="small" @click="queryUserInfoHandle(scope, 'detail')"> 详情 </el-button>
           <el-divider direction="vertical" />
           <el-button link type="primary" size="small" @click="queryUserInfoHandle(scope, 'edit')">编辑</el-button>
+          <template v-if="scope.row.state !== '禁用'">
+            <el-divider direction="vertical" />
+            <el-button link type="primary" size="small">禁用</el-button>
+          </template>
+          <template v-if="scope.row.state !== '注销'">
+            <el-divider direction="vertical" />
+            <el-button link type="primary" size="small">注销</el-button>
+          </template>
           <el-divider direction="vertical" />
-          <el-button link type="primary" size="small">禁用</el-button>
-          <el-divider direction="vertical" />
-          <el-button link type="primary" size="small">注销</el-button>
+          <el-button link type="primary" size="small">重置密码</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -60,7 +66,7 @@ onMounted(() => {
 })
 
 const queryUserHandle = () => {
-  axios.post('/api/queryUser').then(res => {
+  axios.post('/api/users/queryUser').then(res => {
     let data = res.data;
     tableData.value = data.map(item => {
       return {
@@ -107,9 +113,9 @@ const type = ref('');
 const columns = ref([
   { prop: 'userName', label: '用户名', width: 100 },
   { prop: 'uName', label: '姓名', width: 100 },
-  { prop: 'gender', label: '性别', width: 100 },
+  { prop: 'gender', label: '性别', width: 80 },
   { prop: 'mobile', label: '手机号', width: 120 },
-  { prop: 'state', label: '状态', width: 100 },
+  { prop: 'state', label: '状态', width: 80 },
   { prop: 'createTime', label: '创建时间', width: 180 },
   { prop: 'updateTime', label: '修改时间', width: 180 }
 ])

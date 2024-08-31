@@ -4,19 +4,19 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="用户名：" prop="userName">
-            <el-input v-model="form.userName" placeholder="请输入用户名" />
+            <el-input v-model="form.userName" :disabled="props.type == 'detail'" placeholder="请输入用户名" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="姓名：" prop="uName">
-            <el-input v-model="form.uName" placeholder="请输入姓名" />
+            <el-input v-model="form.uName" :disabled="props.type == 'detail'" placeholder="请输入姓名" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="性别：" prop="gender">
-            <el-radio-group v-model="form.gender">
+            <el-radio-group v-model="form.gender" :disabled="props.type == 'detail'">
               <el-radio value="1">男</el-radio>
               <el-radio value="2">女</el-radio>
             </el-radio-group>
@@ -24,14 +24,14 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="手机号：" prop="mobile">
-            <el-input v-model="form.mobile" placeholder="请输入11位手机号" />
+            <el-input v-model="form.mobile" :disabled="props.type == 'detail'" placeholder="请输入11位手机号" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="用户状态：">
-            <el-select v-model="form.state" placeholder="please select your zone">
+            <el-select v-model="form.state" :disabled="props.type == 'detail'">
               <el-option label="正常" value="1" />
               <el-option label="禁用" value="2" />
               <el-option label="注销" value="0" />
@@ -59,7 +59,6 @@ const props = defineProps(['visible', 'userInfo', 'type'])
 const isShowModal = ref(false)
 
 onMounted(() => {
-  console.info(props.type, 'type')
   if (['detail', 'edit'].includes(props.type)) queryUserInfo()
 })
 
@@ -76,7 +75,7 @@ const handleCloseModal = () => {
 }
 
 const queryUserInfo = () => {
-  axios.post('/api/queryUserById', { userId: props.userInfo.userId }).then(res => {
+  axios.post('/api/users/queryUserById', { userId: props.userInfo.userId }).then(res => {
     form.value = res.data;
   })
 }
@@ -95,7 +94,7 @@ const saveUserHandle = () => {
 }
 
 const submitForm = () => {
-  return axios.post('/api/insertUser', form.value).then(response => {
+  return axios.post('/api/users/insertUser', form.value).then(response => {
     emit('updateData')
     ElMessage({
       message: response.data.message,
