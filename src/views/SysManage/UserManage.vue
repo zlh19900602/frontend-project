@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-wrapper">
     <el-form :model="form" label-width="100px">
       <el-row>
         <el-col :span="8">

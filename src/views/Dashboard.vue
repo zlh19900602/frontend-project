@@ -12,7 +12,7 @@
         </el-breadcrumb>
         <img src="../image/login/exit.jpg" class="exit-icon" @click="exitSysHandle" />
       </el-header>
-      <el-main>
+      <el-main class="sys-main">
         <router-view />
       </el-main>
     </el-container>
@@ -49,14 +49,22 @@ const exitSysHandle = () => {
   justify-content: space-between;
   align-items: center;
 }
+
 .sys-header,
 .sys-breadcrumb {
   height: 40px;
   line-height: 40px;
   background: #eee;
 }
+
 .exit-icon {
   width: 30px;
   height: 30px;
+}
+
+.sys-main {
+  padding-top: 0;
+  background: #eee;
+  margin-top: 10px;
 }
 </style>
