@@ -10,18 +10,24 @@
             {{ item.meta.title }}
           </el-breadcrumb-item>
         </el-breadcrumb>
-        <img src="../image/login/exit.jpg" class="exit-icon" @click="exitSysHandle" />
+        <div class="sys-right">
+          <el-button link type="primary" size="small" @click="updatePwdHandle">更改密码</el-button>
+          <img src="../image/login/exit.jpg" class="exit-icon" @click="exitSysHandle" />
+        </div>
       </el-header>
       <el-main class="sys-main">
         <router-view />
       </el-main>
     </el-container>
+    <updatePwd v-if="showModal" :visible.sync="showModal" @closeModal="closeModalHandle">
+    </updatePwd>
   </el-container>
 </template>
 
 <script setup>
+import updatePwd from '../components/updatePwd.vue'
 import SideMenu from '../components/SideMenu.vue'
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // 获取当前路由信息
@@ -38,9 +44,18 @@ const breadcrumbs = computed(() => {
     }
   })
 })
+const showModal = ref(false);
+const closeModalHandle = () => {
+  showModal.value = false;
+}
 
 const exitSysHandle = () => {
+  localStorage.removeItem('userInfo');
   router.push('/')
+}
+
+const updatePwdHandle = () => {
+  showModal.value = true;
 }
 </script>
 <style scoped>
@@ -60,6 +75,11 @@ const exitSysHandle = () => {
 .exit-icon {
   width: 30px;
   height: 30px;
+  padding-left: 10px;
+}
+
+.sys-right {
+  display: flex;
 }
 
 .sys-main {

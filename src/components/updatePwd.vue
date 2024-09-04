@@ -2,13 +2,13 @@
     <el-dialog class="u-modal" v-model="isShowModal" title="更改密码" width="450" draggable overflow @close="handleCloseModal">
         <el-form class="update-pwd-form" ref="userForm" :model="form" :rules="rules" label-width="100px">
             <el-form-item label="旧密码：" prop="oldPwd">
-                <el-input v-model="form.oldPwd" placeholder="请输入旧密码" />
+                <el-input v-model="form.oldPwd" type="password" placeholder="请输入旧密码" />
             </el-form-item>
             <el-form-item label="新密码：" prop="newPwd">
-                <el-input v-model="form.newPwd" placeholder="请输入新密码" />
+                <el-input v-model="form.newPwd" type="password" placeholder="请输入新密码" />
             </el-form-item>
             <el-form-item label="确认密码：" prop="surePwd">
-                <el-input v-model="form.surePwd" placeholder="请输入确认密码：" />
+                <el-input v-model="form.surePwd" type="password" placeholder="请输入确认密码：" />
             </el-form-item>
         </el-form>
         <template #footer>
@@ -23,7 +23,7 @@
 import { ref, defineEmits, watch } from 'vue'
 import axios from 'axios'
 
-const props = defineProps(['visible', 'userName'])
+const props = defineProps(['visible'])
 const emit = defineEmits(['closeModal', 'updateData'])
 
 const isShowModal = ref(false)
@@ -60,10 +60,11 @@ const rules = ref({
 })
 
 const saveUserHandle = () => {
+    let userInfo = JSON.parse(localStorage.getItem('userInfo'))
     userForm.value.validate((valid) => {
         if (valid) {
             let params = {
-                userName: props.userName,
+                userId: userInfo.userId,
                 oldPwd: form.value.oldPwd,
                 newPwd: form.value.newPwd
             }

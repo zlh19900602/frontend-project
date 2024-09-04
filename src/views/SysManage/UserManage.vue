@@ -24,7 +24,7 @@
       </el-row>
       <div class="u-f-btngroup">
         <el-button type="primary" @click="queryUserHandle">查询</el-button>
-        <el-button>重置</el-button>
+        <el-button @click="resetForm">重置</el-button>
       </div>
     </el-form>
     <div class="u-f-opt-btngroup">
@@ -47,7 +47,7 @@
             <el-button link type="primary" size="small" @click="forbiddenHandle(scope, '0')">注销</el-button>
           </template>
           <el-divider direction="vertical" />
-          <el-button link type="primary" size="small">重置密码</el-button>
+          <el-button link type="primary" size="small" @click="resetUserPwd(scope)">重置密码</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -66,7 +66,7 @@ onMounted(() => {
 })
 
 const queryUserHandle = () => {
-  axios.post('/api/users/queryUser').then(res => {
+  axios.post('/api/users/queryUser', form.value).then(res => {
     let data = res.data;
     tableData.value = data.map(item => {
       return {
@@ -104,9 +104,7 @@ const forbiddenHandle = (data, type) => {
     }
   ).then(() => {
     updateUserState(data, type)
-  }).catch(() => {
-
-  })
+  }).catch(() => { })
 }
 
 const updateUserState = (data, type) => {
@@ -137,6 +135,27 @@ const updateUserState = (data, type) => {
   }
 }
 
+const resetUserPwd = (data) => {
+  ElMessageBox.confirm(`您确认要进行重置密码操作吗?`, '提示',
+    {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(() => {
+    axios.post('/api/users/resetUserPassword', { userId: data.row.userId }).then(res => {
+      if (res.data.code === '0') {
+        ElMessage({
+          message: '密码重置成功，重置后的密码为123456',
+          type: 'success',
+        })
+      } else {
+        ElMessage.error('密码重置失败！')
+      }
+    })
+  }).catch(() => { })
+}
+
 const handleCloseModal = () => {
   showModal.value = false
 }
@@ -149,6 +168,15 @@ const form = ref({
 const showModal = ref(false);
 const currentUser = ref(null);
 const type = ref('');
+
+const resetForm = () => {
+  form.value = {
+    userName: '',
+    mobile: '',
+    state: '1'
+  }
+  queryUserHandle()
+}
 
 const columns = ref([
   { prop: 'userName', label: '用户名', width: 100 },
