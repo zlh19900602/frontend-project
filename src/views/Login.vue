@@ -13,25 +13,18 @@
         <el-form-item class="login-btn-wrap">
           <el-button class="login-btn" type="primary" @click="onSubmit">登录</el-button>
         </el-form-item>
-        <div class="update-pwd">
-          <el-button link type="primary" size="small" @click="updatePwdHandle">更改密码</el-button>
-        </div>
       </el-form>
     </div>
-    <updatePwd v-if="showModal" :visible.sync="showModal" :userName.sync="form.name" @closeModal="closeModalHandle">
-    </updatePwd>
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import updatePwd from '../components/updatePwd.vue'
 import axios from 'axios'
 
 const router = useRouter()
 const loginForm = ref(null)
-const showModal = ref(false);
 
 const form = ref({
   name: '',
@@ -43,14 +36,6 @@ const rules = {
   pwd: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
 }
 
-const updatePwdHandle = () => {
-  showModal.value = true;
-}
-
-const closeModalHandle = () => {
-  showModal.value = false;
-}
-
 const onSubmit = () => {
   loginForm.value.validate(valid => {
     if (valid) {
@@ -58,12 +43,10 @@ const onSubmit = () => {
         userName: form.value.name,
         password: form.value.pwd
       }
-      console.log(param, 'param')
       try {
         axios.post('/api/users/login', param).then(res => {
-          console.log(res, 'resres')
-          if (res.data.token) {
-            localStorage.setItem('token', res.data.token);
+          if (res.data.code === '0') {
+            localStorage.setItem('userInfo', JSON.stringify(res.data.info));
             ElMessage.success('登录成功')
             router.push({ name: 'home' })
           } else {
@@ -118,10 +101,5 @@ const onSubmit = () => {
 
 .login-btn-wrap {
   margin-bottom: 10px;
-}
-
-.update-pwd {
-  display: flex;
-  justify-content: center;
 }
 </style>

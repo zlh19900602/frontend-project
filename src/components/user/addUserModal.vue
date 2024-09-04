@@ -83,7 +83,6 @@ const queryUserInfo = () => {
 const saveUserHandle = () => {
   userForm.value.validate((valid) => {
     if (valid) {
-      console.info(form.value, 'value')
       submitForm().then(() => {
         handleCloseModal()
       }).catch(error => {
